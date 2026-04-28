@@ -46,9 +46,13 @@ Thumbs.db
 /src/php/config.php
 /src/php/config_test.php
 /src/php/config/
-/navplan_backend/php-app/config/
+/navplan_backend/php-app/config/*
+!/navplan_backend/php-app/config/
+!/navplan_backend/php-app/config/*.example
 .env
-/secrets/
+/secrets/*
+!/secrets/.gitkeep
+!/secrets/*.example
 
 # data files
 /src/data_import/openaip_airports/*
@@ -88,5 +92,7 @@ navplan2.iml
 /navplan_frontend/angular-app/package-lock.json
 /navplan_backend/php-app/src/Navplan/Aircraft/Importer/Data/
 /navplan_backend/meteo_forecast/
-/navplan_backend/tools/
+/navplan_backend/tools/*
+!/navplan_backend/tools/
+!/navplan_backend/tools/.gitkeep
 /BAK/

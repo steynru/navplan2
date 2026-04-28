@@ -30,11 +30,14 @@ services:
         build:
             context: ./navplan_backend
         container_name: navplan_backend
+        environment:
+            NAVPLAN_CONFIG_FILE: /var/www/html/php/config/navplan_local.ini
         ports:
             - 8080:80
         depends_on:
             - navplan_persistence
         volumes:
+            - ./navplan_backend/php-app/config:/var/www/html/php/config:ro
             - navplan_logs:/var/log/navplan
             - navplan_charts:/var/www/html/charts
             - navplan_meteo_forecast:/var/www/html/meteo_forecast

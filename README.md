@@ -1,27 +1,57 @@
 # Navplan2
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.2.
+VFR flight planning web application with an Angular frontend, PHP backend, and MariaDB persistence.
 
-## Development server
+## Local Docker Setup
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This repository is set up to run locally with Docker Desktop.
 
-## Code scaffolding
+The local checkout includes ignored development files for Docker Compose:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- `secrets/db_root_pw.txt`
+- `secrets/db_navplan_pw.txt`
+- `navplan_backend/php-app/config/navplan_local.ini`
 
-## Build
+For a fresh clone, create them from the committed examples:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```powershell
+Copy-Item secrets/db_root_pw.txt.example secrets/db_root_pw.txt
+Copy-Item secrets/db_navplan_pw.txt.example secrets/db_navplan_pw.txt
+Copy-Item navplan_backend/php-app/config/navplan_local.ini.example navplan_backend/php-app/config/navplan_local.ini
+```
 
-## Running unit tests
+Then start the stack:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```powershell
+docker compose up --build
+```
 
-## Running end-to-end tests
+Open:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+- Frontend: http://localhost:4200
+- Backend: http://localhost:8080
+- phpMyAdmin: http://localhost:8081
 
-## Further help
+The local backend config is selected through the `NAVPLAN_CONFIG_FILE` environment variable in `docker-compose.yml`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Frontend Development
+
+```powershell
+cd navplan_frontend/angular-app
+npm install
+npm start
+```
+
+The Angular dev server runs at http://localhost:4200 and uses the local backend at http://localhost:8080.
+
+## Backend Tests
+
+```powershell
+cd navplan_backend/php-app
+composer install
+vendor/bin/phpunit tests/unit
+```
+
+## Notes
+
+The app is not for operational use. Always use official aviation sources for flight planning.
