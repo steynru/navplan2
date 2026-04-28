@@ -4,6 +4,8 @@ import {createReducer, on} from '@ngrx/store';
 import {WaypointConverter} from '../../../flightroute/domain/converter/waypoint-converter';
 import {MeteoLayer} from '../../domain/model/meteo-layer';
 import {SidebarMode} from './sidebar-mode';
+import {MapLayerType} from './map-layer-type';
+import {MapLayerVisibility} from './map-layer-visibility';
 
 
 const initialState: FlightMapState = {
@@ -22,7 +24,18 @@ const initialState: FlightMapState = {
     showMeteoLayer: false,
     meteoLayer: MeteoLayer.SmaStationsLayer,
     sidebarMode: SidebarMode.OFF,
-    crosshairIcons: []
+    crosshairIcons: [],
+    mapLayerVisibility: {
+        airportsNavaids: true,
+        reporting: true,
+        circuits: true,
+        airspaces: true,
+        airspaceCat: true,
+        airspaceGlider: true,
+        airspaceRestricted: true,
+        notams: true,
+        webcams: true
+    }
 };
 
 
@@ -56,6 +69,14 @@ export const flightMapReducer = createReducer(
     on(FlightMapActions.toggleMeteoLayer, (state) => ({
         ...state,
         showMeteoLayer: !state.showMeteoLayer
+    })),
+    on(FlightMapActions.setMapLayerVisibility, (state, action) => ({
+        ...state,
+        mapLayerVisibility: FlightMapReducerHelper.setVisibility(
+            state.mapLayerVisibility,
+            action.layer,
+            action.visible
+        )
     })),
     on(FlightMapActions.selectMeteoLayer, (state, action) => ({
         ...state,
@@ -91,3 +112,35 @@ export const flightMapReducer = createReducer(
         showTrafficPopup: false
     }))
 );
+
+
+class FlightMapReducerHelper {
+    public static setVisibility(
+        visibility: MapLayerVisibility,
+        layer: MapLayerType,
+        visible: boolean
+    ): MapLayerVisibility {
+        switch (layer) {
+            case MapLayerType.AIRPORTS_NAVAIDS:
+                return {...visibility, airportsNavaids: visible};
+            case MapLayerType.REPORTING:
+                return {...visibility, reporting: visible};
+            case MapLayerType.CIRCUITS:
+                return {...visibility, circuits: visible};
+            case MapLayerType.AIRSPACES:
+                return {...visibility, airspaces: visible};
+            case MapLayerType.AIRSPACE_CAT:
+                return {...visibility, airspaceCat: visible};
+            case MapLayerType.AIRSPACE_GLIDER:
+                return {...visibility, airspaceGlider: visible};
+            case MapLayerType.AIRSPACE_RESTRICTED:
+                return {...visibility, airspaceRestricted: visible};
+            case MapLayerType.NOTAMS:
+                return {...visibility, notams: visible};
+            case MapLayerType.WEBCAMS:
+                return {...visibility, webcams: visible};
+            default:
+                return visibility;
+        }
+    }
+}

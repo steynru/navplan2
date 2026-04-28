@@ -7,6 +7,11 @@ import {MatRadioChange, MatRadioModule} from '@angular/material/radio';
 import {BaseMapActions} from '../../../../base-map/state/ngrx/base-map.actions';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {CommonModule} from '@angular/common';
+import {getMapLayerVisibility} from '../../../state/ngrx/flight-map.selectors';
+import {MapLayerVisibility} from '../../../state/ngrx/map-layer-visibility';
+import {FlightMapActions} from '../../../state/ngrx/flight-map.actions';
+import {MapLayerType} from '../../../state/ngrx/map-layer-type';
+import {MatCheckboxChange} from '@angular/material/checkbox';
 
 
 @Component({
@@ -21,7 +26,9 @@ import {CommonModule} from '@angular/common';
 })
 export class MapLayerSelectionContentComponent implements OnInit {
     public readonly baseMapType$: Observable<MapBaseLayerType> = this.appStore.pipe(select(getSelectedMapBaseLayerType));
+    protected readonly mapLayerVisibility$: Observable<MapLayerVisibility> = this.appStore.pipe(select(getMapLayerVisibility));
     protected readonly MapBaseLayerType = MapBaseLayerType;
+    protected readonly MapLayerType = MapLayerType;
     protected readonly mapLayerTypesAndDescriptions = [
         [MapBaseLayerType.OPENTOPOMAP, 'OpenTopoMap (default)'],
         [MapBaseLayerType.SWISSTOPO_IMAGE, 'Aerial Images (swisstopo)'],
@@ -41,5 +48,13 @@ export class MapLayerSelectionContentComponent implements OnInit {
     public onMapBgSelected(change: MatRadioChange) {
         const mapLayerType = parseInt(change.value, 10);
         this.appStore.dispatch(BaseMapActions.baseLayerSelected({mapBaseLayerType: mapLayerType}));
+    }
+
+
+    public onMapLayerSelected(layer: MapLayerType, change: MatCheckboxChange) {
+        this.appStore.dispatch(FlightMapActions.setMapLayerVisibility({
+            layer: layer,
+            visible: change.checked
+        }));
     }
 }

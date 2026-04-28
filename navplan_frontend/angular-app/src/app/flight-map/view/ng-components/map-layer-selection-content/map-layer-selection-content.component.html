@@ -20,22 +20,49 @@
     <!-- map layers -->
     <div class="layer-selection-section">
         <label id="mapfg-selection-radio-group-label" class="layer-selection-label">Map Layers</label>
-        <mat-checkbox>Airports / Navaids</mat-checkbox>
-        <mat-checkbox>Reporting Points / Sectors</mat-checkbox>
-        <mat-checkbox>AD Circuits</mat-checkbox>
-        <mat-checkbox>Airspaces</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.airportsNavaids"
+            (change)="this.onMapLayerSelected(this.MapLayerType.AIRPORTS_NAVAIDS, $event)"
+        >Airports / Navaids</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.reporting"
+            (change)="this.onMapLayerSelected(this.MapLayerType.REPORTING, $event)"
+        >Reporting Points / Sectors</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.circuits"
+            (change)="this.onMapLayerSelected(this.MapLayerType.CIRCUITS, $event)"
+        >AD Circuits</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.airspaces"
+            (change)="this.onMapLayerSelected(this.MapLayerType.AIRSPACES, $event)"
+        >Airspaces</mat-checkbox>
         <ul>
             <li>
-                <mat-checkbox>Cat A-G</mat-checkbox>
+                <mat-checkbox
+                    [checked]="(this.mapLayerVisibility$ | async)?.airspaceCat"
+                    (change)="this.onMapLayerSelected(this.MapLayerType.AIRSPACE_CAT, $event)"
+                >Cat A-G</mat-checkbox>
             </li>
             <li>
-                <mat-checkbox>Glider</mat-checkbox>
+                <mat-checkbox
+                    [checked]="(this.mapLayerVisibility$ | async)?.airspaceGlider"
+                    (change)="this.onMapLayerSelected(this.MapLayerType.AIRSPACE_GLIDER, $event)"
+                >Glider</mat-checkbox>
             </li>
             <li>
-                <mat-checkbox>P, D, X</mat-checkbox>
+                <mat-checkbox
+                    [checked]="(this.mapLayerVisibility$ | async)?.airspaceRestricted"
+                    (change)="this.onMapLayerSelected(this.MapLayerType.AIRSPACE_RESTRICTED, $event)"
+                >P, D, X</mat-checkbox>
             </li>
         </ul>
-        <mat-checkbox>NOTAM</mat-checkbox>
-        <mat-checkbox>Webcams</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.notams"
+            (change)="this.onMapLayerSelected(this.MapLayerType.NOTAMS, $event)"
+        >NOTAM</mat-checkbox>
+        <mat-checkbox
+            [checked]="(this.mapLayerVisibility$ | async)?.webcams"
+            (change)="this.onMapLayerSelected(this.MapLayerType.WEBCAMS, $event)"
+        >Webcams</mat-checkbox>
     </div>
 </div>
