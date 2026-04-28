@@ -10,6 +10,8 @@ import {AltitudeReference} from '../../../geo-physics/domain/model/geometry/alti
 import {JsDate} from '../../../system/domain/service/date/js-date';
 import {createReducer, on} from '@ngrx/store';
 import {BaseMapActions} from '../../../base-map/state/ngrx/base-map.actions';
+import {SettingsActions} from '../../../settings/state/ngrx/settings.actions';
+import {LocalSettingsStorage} from '../../../settings/domain/service/local-settings-storage';
 
 
 export const initialTrafficState: TrafficState = {
@@ -18,7 +20,8 @@ export const initialTrafficState: TrafficState = {
     isWatching: false,
     status: TrafficServiceStatus.OFF,
     trafficMap: new TrafficMap(new JsDate()),
-    maxTrafficAgeSec: TrafficPositionMerger.TRAFFIC_MAX_AGE_SEC
+    maxTrafficAgeSec: TrafficPositionMerger.TRAFFIC_MAX_AGE_SEC,
+    maxTrafficAltitudeFt: LocalSettingsStorage.read().maxTrafficAltitudeFt
 };
 
 
@@ -32,8 +35,22 @@ export const trafficReducer = createReducer(
             new Altitude(0, AltitudeUnit.FT, AltitudeReference.MSL), // TODO
             action.extent.maxLon,
             action.extent.maxLat,
-            new Altitude(15000, AltitudeUnit.FT, AltitudeReference.MSL), // TODO
+            new Altitude(state.maxTrafficAltitudeFt, AltitudeUnit.FT, AltitudeReference.MSL),
         )
+    })),
+    on(SettingsActions.updateSettings, (state, action) => ({
+        ...state,
+        maxTrafficAltitudeFt: action.settings.maxTrafficAltitudeFt,
+        extent: state.extent
+            ? new Extent3d(
+                state.extent.minLon,
+                state.extent.minLat,
+                state.extent.minAlt,
+                state.extent.maxLon,
+                state.extent.maxLat,
+                new Altitude(action.settings.maxTrafficAltitudeFt, AltitudeUnit.FT, AltitudeReference.MSL)
+            )
+            : state.extent
     })),
     on(TrafficActions.startWatch, (state, action) => ({
         ...state,

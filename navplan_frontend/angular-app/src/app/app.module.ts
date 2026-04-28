@@ -25,6 +25,7 @@ import {DownloadContainerComponent} from './exporter/view/ng-components/download
 import {MessageContainerComponent} from './message/view/ng-components/message-container/message-container.component';
 import {NavbarContainerComponent} from './navbar/view/ng-components/navbar-container/navbar-container.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {SettingsStateModule} from './settings/state/settings-state.module';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
         BrowserModule,
         BrowserAnimationsModule,
         CommonViewModule,
+        SettingsStateModule,
         ExporterViewModule,
         FlightMapViewModule,
         AircraftViewModule,

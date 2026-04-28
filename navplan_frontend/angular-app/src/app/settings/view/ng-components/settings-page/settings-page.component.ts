@@ -1,15 +1,25 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {MapBaseLayerType} from '../../../../base-map/domain/model/map-base-layer-type';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {MessageActions} from '../../../../message/state/ngrx/message.actions';
 import {Message} from '../../../../message/domain/model/message';
 import {UnitSettingsComponent} from '../../../../geo-physics/view/ng-components/unit-settings/unit-settings.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {getSettingsState} from '../../../state/ngrx/settings.selectors';
+import {take} from 'rxjs/operators';
+import {SettingsActions} from '../../../state/ngrx/settings.actions';
+import {LocalSettingsState} from '../../../state/state-model/local-settings-state';
 
 
 @Component({
     selector: 'app-settings-page',
     imports: [
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
         UnitSettingsComponent
     ],
     templateUrl: './settings-page.component.html',
@@ -17,7 +27,6 @@ import {UnitSettingsComponent} from '../../../../geo-physics/view/ng-components/
 })
 export class SettingsPageComponent implements OnInit {
     settingsForm: FormGroup;
-    MapbaselayerType: typeof MapBaseLayerType = MapBaseLayerType;
 
     constructor(private appStore: Store<any>) {
     }
@@ -56,22 +65,33 @@ export class SettingsPageComponent implements OnInit {
 
 
     private initFormValues() {
-        /*
-        this.settingsForm = new FormGroup({
-            'maxTrafficAltitudeFt' : new FormControl(
-                this.session.settings.maxTrafficAltitude.ft,
-                [ Validators.required, Validators.min(0) ]),
-            'baseMapType': new FormControl(this.session.map.baseMapType, [ Validators.required ])
+        this.appStore.select(getSettingsState).pipe(take(1)).subscribe(settings => {
+            this.settingsForm = new FormGroup({
+                magneticVariationDeg: new FormControl(
+                    settings.magneticVariationDeg,
+                    [Validators.required, Validators.min(-30), Validators.max(30)]
+                ),
+                maxTrafficAltitudeFt: new FormControl(
+                    settings.maxTrafficAltitudeFt,
+                    [Validators.required, Validators.min(0)]
+                ),
+                reserveTimeMin: new FormControl(
+                    settings.reserveTimeMin,
+                    [Validators.required, Validators.min(0)]
+                )
+            });
         });
-        */
     }
 
 
     private updateSettings() {
-        /*
         const formValues = this.settingsForm.value;
-        this.session.settings.maxTrafficAltitude = new Length(formValues.maxTrafficAltitudeFt as number, LengthUnit.FT);
-        this.session.map.baseMapType = MapbaselayerType[MapbaselayerType[formValues.baseMapType]];
-        */
+        const settings: LocalSettingsState = {
+            magneticVariationDeg: Number(formValues.magneticVariationDeg),
+            maxTrafficAltitudeFt: Number(formValues.maxTrafficAltitudeFt),
+            reserveTimeMin: Number(formValues.reserveTimeMin)
+        };
+
+        this.appStore.dispatch(SettingsActions.updateSettings({settings}));
     }
 }

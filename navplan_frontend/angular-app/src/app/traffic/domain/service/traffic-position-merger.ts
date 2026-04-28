@@ -29,7 +29,11 @@ export class TrafficPositionMerger {
         const oldestTimestampMs = this.date.nowMs() - TrafficPositionMerger.TRAFFIC_MAX_AGE_SEC * 1000;
 
         oldPosList.forEach(pos => {
-            if (extent.containsPoint2d(pos.position) && pos.position.timestamp.epochMs >= oldestTimestampMs) {
+            const isInsideExtent = pos.position.hasAltitude()
+                ? extent.containsPoint3d(pos.position)
+                : extent.containsPoint2d(pos.position);
+
+            if (isInsideExtent && pos.position.timestamp.epochMs >= oldestTimestampMs) {
                 newPosList.push(pos);
             }
         });
