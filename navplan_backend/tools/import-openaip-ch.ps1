@@ -25,7 +25,7 @@ if ([string]::IsNullOrWhiteSpace($apiKey)) {
 Push-Location $repoRoot
 try {
     Write-Host "Importing OpenAIP CH airports, navaids and airspaces into Docker..."
-    docker compose exec navplan_backend php /var/www/html/php/Navplan/OpenAip/ConsoleImportOnlyCH.php
+    docker compose exec navplan_backend php /var/www/html/php/Navplan/OpenAip/ConsoleImportIfDue.php --force --country=CH
 
     if (-not $SkipCorrections) {
         $mariadbCommand = "mariadb -u root -p`$(cat /run/secrets/db_root_pw) tschanz_navplan"

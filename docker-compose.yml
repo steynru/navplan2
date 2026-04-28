@@ -32,6 +32,11 @@ services:
         container_name: navplan_backend
         environment:
             NAVPLAN_CONFIG_FILE: /var/www/html/php/config/navplan_local.ini
+            NAVPLAN_AUTO_IMPORT_OPENAIP: "true"
+            NAVPLAN_AUTO_IMPORT_COUNTRY: CH
+            NAVPLAN_AUTO_IMPORT_INTERVAL_SECONDS: 604800
+            NAVPLAN_AUTO_IMPORT_CHECK_INTERVAL_SECONDS: 3600
+            NAVPLAN_AUTO_IMPORT_START_DELAY_SECONDS: 15
         ports:
             - 8080:80
         depends_on:

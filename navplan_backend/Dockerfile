@@ -63,7 +63,10 @@ RUN composer update
 COPY php-app/api /var/www/html/api
 COPY php-app/src /var/www/html/php
 COPY php-app/config /var/www/html/php/config
+COPY docker-entrypoint.sh /usr/local/bin/navplan-docker-entrypoint
+RUN chmod +x /usr/local/bin/navplan-docker-entrypoint
 
 EXPOSE 80
 
+ENTRYPOINT ["navplan-docker-entrypoint"]
 CMD ["apache2-foreground"]
