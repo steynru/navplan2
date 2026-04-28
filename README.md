@@ -34,6 +34,15 @@ Open:
 
 The local backend config is selected through the `NAVPLAN_CONFIG_FILE` environment variable in `docker-compose.yml`.
 
+Fresh Docker volumes are initialized with a small local parity seed dataset from `navplan_persistence/db_init_scripts/03_seed_local_parity_data.sql`. It adds a few representative aerodromes, navaids, airspace/reporting items, a webcam, and an SMA station so the map and API endpoints can be smoke-tested without running the full external import pipeline.
+
+If you already have an existing `navplan_data` Docker volume, recreate it to re-run all init scripts:
+
+```powershell
+docker compose down -v
+docker compose up --build
+```
+
 ## Frontend Development
 
 ```powershell
