@@ -9,7 +9,8 @@ use Navplan\User\Domain\Model\TokenCredentials;
 
 class ProdConfigDiContainer implements IConfigDiContainer
 {
-    public const CONFIG_FILE = __DIR__ . "/../../config/navplan_prod.ini";
+    public const DEFAULT_CONFIG_FILE = __DIR__ . "/../../config/navplan_prod.ini";
+    public const CONFIG_FILE_ENV_VAR = "NAVPLAN_CONFIG_FILE";
 
     private IniFileConfig $iniFileConfig;
 
@@ -94,9 +95,21 @@ class ProdConfigDiContainer implements IConfigDiContainer
     private function getIniFileConfig(): IniFileConfig
     {
         if (!isset($this->iniFileConfig)) {
-            $this->iniFileConfig = new IniFileConfig(self::CONFIG_FILE);
+            $this->iniFileConfig = new IniFileConfig($this->getConfigFile());
         }
 
         return $this->iniFileConfig;
+    }
+
+
+    private function getConfigFile(): string
+    {
+        $configFile = getenv(self::CONFIG_FILE_ENV_VAR);
+
+        if ($configFile !== false && trim($configFile) !== "") {
+            return $configFile;
+        }
+
+        return self::DEFAULT_CONFIG_FILE;
     }
 }

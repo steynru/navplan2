@@ -1,0 +1,19 @@
+db[host] = navplan_persistence
+db[user] = tschanz_navfpl
+db[pw] = navplan_dev_pw
+db[name] = tschanz_navplan
+
+jwt[secret] = local_dev_only_change_me
+jwt[issuer] = navplan-local
+
+icao_api_key =
+adsbexchange_api_key =
+openaip_api_key =
+
+meteo_forecast_base_dir = /var/www/html/meteo_forecast
+terrain_tiles_base_dir = /var/www/html/terraintiles
+chart_base_dir = /var/www/html/charts
+tmp_dir = /var/www/html/tmp
+log_dir = /var/log/navplan
+log_file = navplan.log
+log_level = DEBUG

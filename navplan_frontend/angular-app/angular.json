@@ -21,15 +21,7 @@
                         ],
                         "assets": [
                             "src/assets",
-                            "src/php",
-                            "src/data_import",
-                            "src/.htaccess",
                             "src/index.php",
-                            "src/manifest.php",
-                            "src/manifest_iframe.html",
-                            "src/offline.html",
-                            "src/version.php",
-                            "src/version.txt",
                             "src/favicon.png",
                             "src/summary_card_image.png"
                         ],
@@ -106,15 +98,7 @@
                         ],
                         "assets": [
                             "src/assets",
-                            "src/php",
-                            "src/data_import",
-                            "src/.htaccess",
                             "src/index.php",
-                            "src/manifest.php",
-                            "src/manifest_iframe.html",
-                            "src/offline.html",
-                            "src/version.php",
-                            "src/version.txt",
                             "src/favicon.png",
                             "src/summary_card_image.png"
                         ]
