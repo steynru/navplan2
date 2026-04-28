@@ -95,4 +95,13 @@ navplan2.iml
 /navplan_backend/tools/*
 !/navplan_backend/tools/
 !/navplan_backend/tools/.gitkeep
+!/navplan_backend/tools/*.ps1
+/navplan_persistence/local_import/*
+!/navplan_persistence/local_import/
+!/navplan_persistence/local_import/.gitkeep
+!/navplan_persistence/local_import/README.md
+/navplan_persistence/tools/*
+!/navplan_persistence/tools/
+!/navplan_persistence/tools/.gitkeep
+!/navplan_persistence/tools/*.ps1
 /BAK/
