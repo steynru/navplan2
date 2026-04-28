@@ -32,6 +32,7 @@ services:
         container_name: navplan_backend
         environment:
             NAVPLAN_CONFIG_FILE: /var/www/html/php/config/navplan_local.ini
+            NAVPLAN_OPENAIP_API_KEY: ${OPENAIP_API_KEY:-}
             NAVPLAN_AUTO_IMPORT_OPENAIP: "true"
             NAVPLAN_AUTO_IMPORT_COUNTRY: CH
             NAVPLAN_AUTO_IMPORT_INTERVAL_SECONDS: 604800

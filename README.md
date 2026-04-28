@@ -18,6 +18,7 @@ For a fresh clone, create them from the committed examples:
 Copy-Item secrets/db_root_pw.txt.example secrets/db_root_pw.txt
 Copy-Item secrets/db_navplan_pw.txt.example secrets/db_navplan_pw.txt
 Copy-Item navplan_backend/php-app/config/navplan_local.ini.example navplan_backend/php-app/config/navplan_local.ini
+Copy-Item .env.example .env
 ```
 
 Then start the stack:
@@ -51,11 +52,19 @@ The seed data is intentionally tiny. For map detail similar to the legacy Navpla
 
 The current backend can import OpenAIP data for Switzerland. OpenAIP is the local source used for airports, navaids and airspaces because it provides all three datasets through the API already supported by the backend.
 
-Add your local OpenAIP API key to the ignored config file:
+Add your local OpenAIP API key to the ignored Docker `.env` file:
+
+```dotenv
+OPENAIP_API_KEY=your_local_key_here
+```
+
+The backend also still supports the ignored local ini file for compatibility:
 
 ```ini
 openaip_api_key = your_local_key_here
 ```
+
+When both are set, `OPENAIP_API_KEY` from `.env` takes precedence.
 
 When the Docker stack starts, `navplan_backend` automatically checks whether the OpenAIP import is due. The default local cadence is weekly:
 
