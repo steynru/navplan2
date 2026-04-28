@@ -43,6 +43,64 @@ docker compose down -v
 docker compose up --build
 ```
 
+## Loading Real Map Overlay Data
+
+The seed data is intentionally tiny. For map detail similar to the legacy Navplan instance, load real overlay data into the Docker database.
+
+### Airports, Navaids and Airspaces
+
+The current backend has an OpenAIP importer for Switzerland. Add your local OpenAIP API key to the ignored config file:
+
+```ini
+openaip_api_key = your_local_key_here
+```
+
+Then start the stack and run:
+
+```powershell
+.\navplan_backend\tools\import-openaip-ch.ps1
+```
+
+This imports OpenAIP airports, navaids and airspaces, then applies the checked-in OpenAIP correction SQL scripts. It does not import webcams or reporting points.
+
+### Webcams, Reporting Points and Full Legacy Parity
+
+Webcams and reporting points are local database tables in this repo, not OpenAIP imports. To mirror a legacy Navplan database, export the relevant map tables from the source database into an ignored local file such as:
+
+```text
+navplan_persistence\local_import\navplan_v1_map_data.sql
+```
+
+Recommended table set for map parity:
+
+```text
+openaip_airports
+openaip_airports2
+openaip_runways
+openaip_runways2
+openaip_radios
+openaip_radios2
+openaip_navaids
+openaip_navaids2
+openaip_airspace
+openaip_airspace2
+openaip_airspace_detaillevels
+reporting_points
+webcams
+```
+
+After placing the SQL dump locally, import it into Docker:
+
+```powershell
+.\navplan_persistence\tools\import-legacy-map-data.ps1
+```
+
+You can also pass a custom dump path:
+
+```powershell
+.\navplan_persistence\tools\import-legacy-map-data.ps1 -SqlPath D:\path\to\navplan_v1_map_data.sql
+```
+
 ## Frontend Development
 
 ```powershell
