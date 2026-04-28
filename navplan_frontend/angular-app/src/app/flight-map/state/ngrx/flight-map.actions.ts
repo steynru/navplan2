@@ -8,6 +8,7 @@ import {MeteoLayer} from '../../domain/model/meteo-layer';
 import {Airport} from '../../../aerodrome/domain/model/airport';
 import {CrosshairIcon} from "../../../aerodrome-charts/domain/model/crosshair-icon";
 import {Traffic} from '../../../traffic/domain/model/traffic';
+import {MapLayerType} from './map-layer-type';
 
 
 export class FlightMapActions {
@@ -42,6 +43,11 @@ export class FlightMapActions {
 
     public static readonly toggleMeteoLayer = createAction(
         '[FlightMapPage] Toggle meteo layer',
+    );
+
+    public static readonly setMapLayerVisibility = createAction(
+        '[MapLayerSelection] Set map layer visibility',
+        props<{ layer: MapLayerType, visible: boolean }>()
     );
 
     public static readonly selectMeteoLayer = createAction(

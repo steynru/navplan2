@@ -1,0 +1,12 @@
+.local-settings-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.local-settings-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}

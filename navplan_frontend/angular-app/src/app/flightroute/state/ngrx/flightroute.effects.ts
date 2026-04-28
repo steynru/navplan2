@@ -10,6 +10,12 @@ import {initialFlightrouteState} from './flightroute.reducer';
 import {AircraftListActions} from '../../../aircraft/state/ngrx/aircraft-list.actions';
 import {getCurrentAircraft} from '../../../aircraft/state/ngrx/aircraft.selectors';
 import {PlanActions} from '../../../plan/state/ngrx/plan.actions';
+import {SettingsActions} from '../../../settings/state/ngrx/settings.actions';
+import {getMagneticVariationDeg, getReserveTimeMin} from '../../../settings/state/ngrx/settings.selectors';
+import {Time} from '../../../geo-physics/domain/model/quantities/time';
+import {TimeUnit} from '../../../geo-physics/domain/model/quantities/time-unit';
+import {Angle} from '../../../geo-physics/domain/model/quantities/angle';
+import {AngleUnit} from '../../../geo-physics/domain/model/quantities/angle-unit';
 
 
 @Injectable()
@@ -17,6 +23,8 @@ export class FlightrouteEffects {
     private flightroute$ = this.appStore.pipe(select(getFlightroute));
     private aircraft$ = this.appStore.pipe(select(getCurrentAircraft));
     private routeDistanceUnit$ = this.appStore.pipe(select(getRouteDistanceUnit));
+    private reserveTimeMin$ = this.appStore.pipe(select(getReserveTimeMin));
+    private magneticVariationDeg$ = this.appStore.pipe(select(getMagneticVariationDeg));
 
 
     constructor(
@@ -73,12 +81,25 @@ export class FlightrouteEffects {
 
     recalculateFlightrouteAction$ = createEffect(() => this.actions$.pipe(
         ofType(FlightrouteActions.changed),
-        withLatestFrom(this.routeDistanceUnit$),
-        map(([action, routeDistanceUnit]) => {
+        withLatestFrom(this.routeDistanceUnit$, this.reserveTimeMin$, this.magneticVariationDeg$),
+        map(([action, routeDistanceUnit, reserveTimeMin, magneticVariationDeg]) => {
             const newFlightRoute = action.flightroute?.clone();
+            if (newFlightRoute) {
+                newFlightRoute.fuel.reserveTime = new Time(reserveTimeMin, TimeUnit.M);
+                newFlightRoute.getWaypointsInclAlternate().forEach(waypoint => {
+                    waypoint.variation = new Angle(magneticVariationDeg, AngleUnit.DEG);
+                });
+            }
             FlightrouteCalcHelper.calcFlightRoute(newFlightRoute, routeDistanceUnit);
             return FlightrouteActions.update({flightroute: newFlightRoute});
         })
+    ));
+
+
+    updateSettingsAction$ = createEffect(() => this.actions$.pipe(
+        ofType(SettingsActions.updateSettings),
+        withLatestFrom(this.flightroute$),
+        map(([action, flightroute]) => FlightrouteActions.changed({flightroute: flightroute.clone()}))
     ));
 
 

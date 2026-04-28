@@ -10,4 +10,5 @@ export interface TrafficState {
     status: TrafficServiceStatus;
     trafficMap: TrafficMap;
     maxTrafficAgeSec;
+    maxTrafficAltitudeFt: number;
 }

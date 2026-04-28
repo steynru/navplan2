@@ -37,6 +37,7 @@ import {
     getCrosshairIcons,
     getFlightMapShowMeteoLayer,
     getFlightMapShowOverlay,
+    getMapLayerVisibility,
     getShowMapLayerSelection,
     getSidebarMode
 } from '../../../state/ngrx/flight-map.selectors';
@@ -123,6 +124,7 @@ import {
 import {SidebarMode} from '../../../state/ngrx/sidebar-mode';
 import {OlCrosshairContainer} from '../../../../aerodrome-charts/view/ol-components/ol-crosshair-container';
 import {getCurrentUser} from '../../../../user/state/ngrx/user.selectors';
+import {MapLayerVisibility} from '../../../state/ngrx/map-layer-visibility';
 
 
 @Component({
@@ -165,6 +167,7 @@ export class FlightMapPageComponent implements OnInit, AfterViewInit, OnDestroy 
     private hideNotamPopupSubscription: Subscription;
     private showTrafficPopupSubscription: Subscription;
     private hideTrafficPopupSubscription: Subscription;
+    private mapLayerVisibilitySubscription: Subscription;
     private olAirportContainer: OlAirportContainer;
     private olAirportChartContainer: OlAirportChartContainer;
     private olCrosshairIconContainer: OlCrosshairContainer;
@@ -288,6 +291,7 @@ export class FlightMapPageComponent implements OnInit, AfterViewInit, OnDestroy 
         this.hideNotamPopupSubscription.unsubscribe();
         this.showTrafficPopupSubscription.unsubscribe();
         this.hideTrafficPopupSubscription.unsubscribe();
+        this.mapLayerVisibilitySubscription?.unsubscribe();
     }
 
     // endregion
@@ -359,6 +363,19 @@ export class FlightMapPageComponent implements OnInit, AfterViewInit, OnDestroy 
             rotation
         );
 
+        this.mapLayerVisibilitySubscription = this.appStore
+            .pipe(select(getMapLayerVisibility))
+            .subscribe((visibility: MapLayerVisibility) => {
+                airportLayer.setVisible(visibility.airportsNavaids);
+                navaidLayer.setVisible(visibility.airportsNavaids);
+                reportingPointLayer.setVisible(visibility.reporting);
+                reportingSectorLayer.setVisible(visibility.reporting);
+                circuitLayer.setVisible(visibility.circuits);
+                airspaceLayer.setVisible(visibility.airspaces);
+                notamLayer.setVisible(visibility.notams);
+                webcamLayer.setVisible(visibility.webcams);
+            });
+
         this.olAirportContainer = new OlAirportContainer(
             airportLayer,
             this.appStore.pipe(select(getAirports))
@@ -386,7 +403,8 @@ export class FlightMapPageComponent implements OnInit, AfterViewInit, OnDestroy 
         );
         this.olAirpsaceContainer = new OlAirspaceContainer(
             airspaceLayer,
-            this.appStore.pipe(select(getAirspaces))
+            this.appStore.pipe(select(getAirspaces)),
+            this.appStore.pipe(select(getMapLayerVisibility))
         );
         this.olNavaidContainer = new OlNavaidContainer(
             navaidLayer,
