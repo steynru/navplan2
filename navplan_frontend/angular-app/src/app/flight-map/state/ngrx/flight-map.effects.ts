@@ -28,6 +28,9 @@ import {SidebarMode} from './sidebar-mode';
 import {Traffic} from '../../../traffic/domain/model/traffic';
 import {NotamState} from '../../../notam/state/state-model/notam-state';
 import {getNotamState} from '../../../notam/state/ngrx/notam.selectors';
+import {Waypoint} from '../../../flightroute/domain/model/waypoint';
+import {WaypointType} from '../../../flightroute/domain/model/waypoint-type';
+import {WaypointAltitude} from '../../../flightroute/domain/model/waypoint-altitude';
 
 
 @Injectable()
@@ -193,8 +196,16 @@ export class FlightMapEffects {
                 returnActions.push(SearchActions.hidePositionSearchResults());
             }
 
-            // perform position search, if no map item clicked and no position search results active and no overlay active
-            if (!action.dataItem && !searchState.positionSearchState.clickPos && !flightMapState.showMapOverlay.dataItem && !flightMapState.showNotamPopup && !flightMapState.showTrafficPopup) {
+            // show a route-add popup for an empty-map click, matching the legacy map workflow
+            if (!action.dataItem && !flightMapState.showNotamPopup && !flightMapState.showTrafficPopup) {
+                returnActions.push(FlightMapActions.showOverlay({
+                    dataItem: this.createCoordinateWaypoint(action.clickPos),
+                    clickPos: action.clickPos,
+                }));
+            }
+
+            // perform position search, if no map item clicked
+            if (!action.dataItem && !flightMapState.showNotamPopup && !flightMapState.showTrafficPopup) {
                 returnActions.push(SearchActions.searchByPosition({
                     clickPos: action.clickPos,
                     zoom: action.zoom
@@ -320,6 +331,25 @@ export class FlightMapEffects {
         }
 
         return 0;
+    }
+
+
+    private createCoordinateWaypoint(position: Position2d): Waypoint {
+        return new Waypoint(
+            WaypointType.coordinates,
+            '',
+            '',
+            this.formatCoordinateName(position),
+            '',
+            '',
+            position.clone(),
+            new WaypointAltitude()
+        );
+    }
+
+
+    private formatCoordinateName(position: Position2d): string {
+        return position.latitude.toFixed(4) + ' / ' + position.longitude.toFixed(4);
     }
 
     // endregion

@@ -3,10 +3,24 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.local-settings-title,
+.unit-settings-title {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .local-settings-actions {
     display: flex;
     gap: 12px;
     align-items: center;
+}
+
+.unit-settings-title {
+    padding: 0 16px 8px;
 }

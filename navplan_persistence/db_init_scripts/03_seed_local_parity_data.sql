@@ -62,20 +62,4 @@ INSERT IGNORE INTO `openaip_airspace_detaillevels`
 VALUES
     (990001, 990001, 6, 20, '7.3500 46.8500, 7.6500 46.8500, 7.6500 47.0000, 7.3500 47.0000, 7.3500 46.8500');
 
-INSERT IGNORE INTO `reporting_points`
-    (`id`, `type`, `airport_icao`, `name`, `heli`, `inbd_comp`, `outbd_comp`, `min_ft`, `max_ft`, `latitude`, `longitude`, `polygon`, `extent`)
-VALUES
-    (990001, 'POINT', 'LSZB', 'ECHO LOCAL TEST', 0, 1, 1, NULL, NULL, 46.9250, 7.6500, NULL, ST_GeomFromText('POINT(7.6500 46.9250)')),
-    (990002, 'SECTOR', 'LSZB', 'NORTH LOCAL TEST', 0, 1, 1, 2500, 4500, NULL, NULL, '7.4500 46.9600, 7.6000 46.9600, 7.6000 47.0200, 7.4500 47.0200, 7.4500 46.9600', ST_GeomFromText('POLYGON((7.4500 46.9600, 7.6000 46.9600, 7.6000 47.0200, 7.4500 47.0200, 7.4500 46.9600))'));
-
-INSERT IGNORE INTO `webcams`
-    (`id`, `name`, `url`, `latitude`, `longitude`, `airport_icao`)
-VALUES
-    (990001, 'Bern-Belp Local Test Webcam', 'https://example.com/navplan-local-test-webcam.jpg', 46.9125, 7.4992, 'LSZB');
-
-INSERT IGNORE INTO `meteo_sma_stations`
-    (`id`, `station_id`, `name`, `latitude`, `longitude`, `altitude_m`)
-VALUES
-    (990001, 'BERN', 'Bern Local Test Station', 46.9125, 7.4992, 510);
-
 COMMIT;
