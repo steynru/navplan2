@@ -51,7 +51,10 @@ class IniFileConfig implements IDbConfig, ITokenConfig, IOpenAipConfig, IAdsbexC
         );
         $this->icaoApiKey = $iniValues['icao_api_key'];
         $this->adsbExchangeApiKey = $iniValues['adsbexchange_api_key'];
-        $this->openAipApiKey = $iniValues['openaip_api_key'];
+        $openAipApiKeyEnv = getenv("NAVPLAN_OPENAIP_API_KEY");
+        $this->openAipApiKey = $openAipApiKeyEnv !== false && trim($openAipApiKeyEnv) !== ""
+            ? trim($openAipApiKeyEnv)
+            : $iniValues['openaip_api_key'];
         $this->meteoForecastBaseDir = $iniValues['meteo_forecast_base_dir'];
         $this->terrainTilesBaseDir = $iniValues['terrain_tiles_base_dir'];
         $this->chartBaseDir = $iniValues['chart_base_dir'];
