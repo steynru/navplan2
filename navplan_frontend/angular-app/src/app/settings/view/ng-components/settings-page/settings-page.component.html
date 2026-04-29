@@ -1,6 +1,8 @@
 <div class="single-page-container">
     @if (this.settingsForm) {
         <form class="local-settings-form" [formGroup]="this.settingsForm" (ngSubmit)="this.onSubmit()">
+            <h2 class="local-settings-title">Local Defaults</h2>
+
             <mat-form-field>
                 <mat-label>Magnetic Variation</mat-label>
                 <input matInput type="number" formControlName="magneticVariationDeg">
@@ -26,5 +28,6 @@
         </form>
     }
 
+    <h2 class="unit-settings-title">Units</h2>
     <app-unit-settings></app-unit-settings>
 </div>

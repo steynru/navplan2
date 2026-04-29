@@ -32,7 +32,7 @@ export class MapPopupWaypointButtonAddToRouteComponent implements OnInit, OnChan
     ngOnChanges() {
         // set initial dropdown selection
         if (this.flightroute && this.flightroute.waypoints.length > 0) {
-            this.addAfterIndex = (this.flightroute.waypoints.length + 1).toString();
+            this.addAfterIndex = this.flightroute.waypoints.length.toString();
         } else {
             this.addAfterIndex = '0';
         }
