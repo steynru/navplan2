@@ -17,7 +17,12 @@ class LoggingService implements ILoggingService {
         ?string $logfileName = null
     ) {
         if ($logfileName != null) {
-            $this->logFile = fopen($logfileName, "a");
+            $logDir = dirname($logfileName);
+            if (!is_dir($logDir)) {
+                @mkdir($logDir, 0777, true);
+            }
+
+            $this->logFile = @fopen($logfileName, "a") ?: null;
         }
     }
 
