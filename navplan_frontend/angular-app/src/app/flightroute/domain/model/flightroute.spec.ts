@@ -32,6 +32,18 @@ describe('Flightroute', () => {
     });
 
 
+    it('createEmpty keeps aircraft parameters for route planning', () => {
+        const route = Flightroute.createEmpty('Test Route', ac1);
+
+        expect(route.id).toBe(0);
+        expect(route.title).toBe('Test Route');
+        expect(route.comments).toBe('');
+        expect(route.aircraftParams).toBe(ac1);
+        expect(route.waypoints).toEqual([]);
+        expect(route.alternate).toBeUndefined();
+    });
+
+
     it('getWaypointIndex correctly detects the waypoints index', () => {
         expect(route1.getWaypointIndex(wp1)).toBe(0);
         expect(route1.getWaypointIndex(wp2)).toBe(1);

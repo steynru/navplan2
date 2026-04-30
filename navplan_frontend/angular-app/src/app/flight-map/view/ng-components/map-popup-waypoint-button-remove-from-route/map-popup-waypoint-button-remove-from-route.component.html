@@ -1,6 +1,6 @@
 <app-mini-fab-button
     [color]="ButtonColor.RED"
-    (click)="this.removeWaypointClick.emit(this.waypoint)"
+    (buttonClicked)="this.removeWaypointClick.emit(this.waypoint)"
 >
     <i class="fa-solid fa-trash"></i>
 </app-mini-fab-button>
