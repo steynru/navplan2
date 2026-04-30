@@ -13,6 +13,9 @@ import {TableState} from '../../../../common/state/model/table-state';
 import {getFlightrouteList, getFlightrouteListTableState} from '../../../state/ngrx/flightroute-list.selectors';
 import {RouteListTableComponent} from '../route-list-table/route-list-table.component';
 import {CommonModule} from '@angular/common';
+import {FlightrouteActions} from '../../../../flightroute/state/ngrx/flightroute.actions';
+import {PlanActions} from '../../../../plan/state/ngrx/plan.actions';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -32,7 +35,10 @@ export class RouteListPageComponent implements OnInit {
     protected readonly altitudeUnit$ = this.appStore.pipe(select(getAltitudeUnit));
     protected readonly tableState$ = this.appStore.pipe(select(getFlightrouteListTableState));
 
-    constructor(private appStore: Store<any>) {
+    constructor(
+        private appStore: Store<any>,
+        private router: Router
+    ) {
     }
 
 
@@ -42,7 +48,9 @@ export class RouteListPageComponent implements OnInit {
 
 
     protected onRouteCreated(route: Flightroute) {
-        // this.appStore.dispatch(FlightrouteCrudActions.createNewAircraft({aircraft: route}));
+        this.appStore.dispatch(FlightrouteActions.changed({flightroute: route}));
+        this.appStore.dispatch(PlanActions.selectPlanTab({selectedPlanTab: 'waypoints'}));
+        this.router.navigate(['/plan', 'waypoints']);
     }
 
 

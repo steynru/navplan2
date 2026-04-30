@@ -31,8 +31,8 @@ export class Flightroute implements Clonable<Flightroute> {
         return new Flightroute(
             0,
             title,
-            undefined,
-            undefined,
+            '',
+            aircraftParams,
             [],
             undefined,
             new Time(0, TimeUnit.M)

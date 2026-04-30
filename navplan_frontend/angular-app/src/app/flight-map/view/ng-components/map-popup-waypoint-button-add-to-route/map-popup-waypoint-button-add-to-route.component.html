@@ -15,10 +15,5 @@
                 after {{ wp.checkpoint }}
             </mat-option>
         }
-        @if (this.flightroute.waypoints.length > 0) {
-            <mat-option value="{{ this.flightroute.waypoints.length  + 1 }}">
-                at the end
-            </mat-option>
-        }
     </mat-select>
 </mat-form-field>

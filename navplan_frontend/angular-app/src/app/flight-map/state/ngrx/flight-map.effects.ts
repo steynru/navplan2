@@ -28,6 +28,9 @@ import {SidebarMode} from './sidebar-mode';
 import {Traffic} from '../../../traffic/domain/model/traffic';
 import {NotamState} from '../../../notam/state/state-model/notam-state';
 import {getNotamState} from '../../../notam/state/ngrx/notam.selectors';
+import {Waypoint} from '../../../flightroute/domain/model/waypoint';
+import {WaypointType} from '../../../flightroute/domain/model/waypoint-type';
+import {WaypointAltitude} from '../../../flightroute/domain/model/waypoint-altitude';
 
 
 @Injectable()
@@ -131,7 +134,9 @@ export class FlightMapEffects {
             flightMapState.sidebarMode === SidebarMode.OFF),
         switchMap(([action, flightMapState, searchState]) => {
             const returnActions = [];
-            console.log(action.dataItem);
+            const canShowCoordinateWaypoint = !action.dataItem
+                && !flightMapState.showNotamPopup
+                && !flightMapState.showTrafficPopup;
 
             // show map item overlay, if map item clicked
             if (action.dataItem) {
@@ -173,8 +178,8 @@ export class FlightMapEffects {
                 }
             }
 
-            // close map item overlay, if previously open and no map item clicked
-            if (flightMapState.showMapOverlay.dataItem && !action.dataItem) {
+            // close map item overlay, if a non-waypoint popup is being dismissed
+            if (flightMapState.showMapOverlay.dataItem && !action.dataItem && !canShowCoordinateWaypoint) {
                 returnActions.push(FlightMapActions.hideOverlay());
             }
 
@@ -191,6 +196,14 @@ export class FlightMapEffects {
             // close position search results, if previously open
             if (searchState.positionSearchState.clickPos) {
                 returnActions.push(SearchActions.hidePositionSearchResults());
+            }
+
+            // show a route-add popup for an empty-map click, matching the legacy map workflow
+            if (canShowCoordinateWaypoint) {
+                returnActions.push(FlightMapActions.showOverlay({
+                    dataItem: this.createCoordinateWaypoint(action.clickPos),
+                    clickPos: action.clickPos,
+                }));
             }
 
             // perform position search, if no map item clicked and no position search results active and no overlay active
@@ -228,14 +241,6 @@ export class FlightMapEffects {
             notams: notams,
             tabIndex: this.getOverlayTabIndex(action.dataItem),
         }))
-    ));
-
-
-    hideOverlayAction$ = createEffect(() => this.actions$.pipe(
-        ofType(BaseMapActions.mapClicked),
-        withLatestFrom(this.flightMapState$),
-        filter(([action, flightMapState]) => flightMapState.showMapOverlay.dataItem !== undefined),
-        map(() => FlightMapActions.hideOverlay())
     ));
 
 
@@ -320,6 +325,25 @@ export class FlightMapEffects {
         }
 
         return 0;
+    }
+
+
+    private createCoordinateWaypoint(position: Position2d): Waypoint {
+        return new Waypoint(
+            WaypointType.coordinates,
+            '',
+            '',
+            this.formatCoordinateName(position),
+            '',
+            '',
+            position.clone(),
+            new WaypointAltitude()
+        );
+    }
+
+
+    private formatCoordinateName(position: Position2d): string {
+        return position.latitude.toFixed(4) + ' / ' + position.longitude.toFixed(4);
     }
 
     // endregion
